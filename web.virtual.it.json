@@ -1,0 +1,113 @@
+{
+    "builders": [
+        {
+            "name": "web.virtual.it-elementary",
+            "type": "virtualbox-iso",
+            "guest_os_type": "Ubuntu_64",
+            "iso_url": "iso/ubuntu-16.04.3-server-amd64.iso",
+            "iso_checksum": "10fcd20619dce11fe094e960c85ba4a9",
+            "iso_checksum_type": "md5",
+            "format": "ova",
+            "disk_size": "16000",
+            "http_directory": "http",
+            "ssh_username": "vagrant",
+            "ssh_password": "vagrant",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "15000s",
+            "shutdown_command": "echo 'vagrant' | sudo -S shutdown -P now",
+            "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+            "virtualbox_version_file": ".vbox_version",
+            "vm_name": "web.virtual.it-elementary-ubuntu-16.04-amd64",
+            "vboxmanage": [
+                [
+                    "modifyvm",
+                    "{{.Name}}",
+                    "--memory",
+                    "1024"
+                ],
+                [
+                    "modifyvm",
+                    "{{.Name}}",
+                    "--cpus",
+                    "1"
+                ]
+            ],
+            "boot_command": [
+                "<enter><wait><f6><esc><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                "/install/vmlinuz<wait>",
+                " auto<wait>",
+                " console-setup/ask_detect=false<wait>",
+                " console-setup/layoutcode=us<wait>",
+                " console-setup/modelcode=pc105<wait>",
+                " debconf/frontend=noninteractive<wait>",
+                " debian-installer=en_US<wait>",
+                " fb=false<wait>",
+                " initrd=/install/initrd.gz<wait>",
+                " kbd-chooser/method=us<wait>",
+                " keyboard-configuration/layout=USA<wait>",
+                " keyboard-configuration/variant=USA<wait>",
+                " locale=en_US<wait>",
+                " netcfg/get_domain=vm<wait>",
+                " netcfg/get_hostname=vagrant<wait>",
+                " grub-installer/bootdev=/dev/sda<wait>",
+                " noapic<wait>",
+                " preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/web.cfg",
+                " -- <wait>",
+                "<enter><wait>"
+            ],
+            "boot_wait": "10s",
+            "export_opts": [
+                "--manifest",
+                "--vsys",
+                "0",
+                "--description",
+                "web.virtual.it-elementary {{user `version`}}",
+                "--version",
+                "{{user `version`}}"
+            ]
+
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+            "script": "scripts/setup.sh"
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+            "script": "scripts/servers.sh"
+        },
+        {
+            "type": "file",
+            "source": "conf/",
+            "destination": "/tmp"
+        },
+        {
+            "type": "file",
+            "source": "keys",
+            "destination": "/tmp"
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+            "script": "scripts/files.sh"
+        },
+        {
+            "type": "shell",
+            "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+            "script": "scripts/cleanup.sh"
+        }
+    ],
+    "post-processors": [
+        {
+            "type": "vagrant",
+            "compression_level": 9,
+            "output": "builds/{{.BuildName}}_{{user `version`}}.box"
+        }
+    ]
+}
