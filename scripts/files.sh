@@ -6,7 +6,6 @@ sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.$(date "+%b_%d_%Y_%H.%M.%S")
 
 sudo cp /tmp/nginx/nginx.conf /etc/nginx/nginx.conf
 sudo cp /tmp/nginx/http.conf /home/vagrant/conf/nginx/http.conf
-sudo cp /tmp/nginx/cashflow.conf /home/vagrant/conf/nginx/cashflow.conf
 sudo cp /tmp/nginx/mime.types /home/vagrant/conf/nginx/mime.types
 
 # mysql
