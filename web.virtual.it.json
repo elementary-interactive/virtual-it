@@ -54,7 +54,7 @@
                 " netcfg/get_hostname=vagrant<wait>",
                 " grub-installer/bootdev=/dev/sda<wait>",
                 " noapic<wait>",
-                " preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/web.cfg",
+                " preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/preseed.web.cfg",
                 " -- <wait>",
                 "<enter><wait>"
             ],
