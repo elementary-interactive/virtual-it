@@ -108,6 +108,14 @@
             "type": "vagrant",
             "compression_level": 9,
             "output": "builds/{{.BuildName}}_{{user `version`}}.box"
+        },
+        {
+            "type": "manifest",
+            "output": "manifest.json",
+            "strip_path": true
+        },
+        {
+            "type": "checksum"
         }
     ]
 }
